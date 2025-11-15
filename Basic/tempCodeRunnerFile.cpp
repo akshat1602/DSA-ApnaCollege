@@ -1,0 +1,1 @@
+cout<<"you entered a multiple of 10"<<endl;
