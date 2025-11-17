@@ -2,18 +2,6 @@
 #include <vector>
 using namespace std;
 
-void merge(int ans[], int st, int end, int mid);
-
-void mergeSort(int ans[], int st, int end){
-    if(st >= end) return;
-
-    int mid = st + (end - st) / 2;
-    mergeSort(ans, st, mid); // left part
-    mergeSort(ans, mid + 1, end); // right part
-
-    merge(ans, st, end, mid); // conquer
-}
-
 void merge(int ans[], int st, int end, int mid){
     vector<int> copy;
     int i = st, j = mid + 1; // iterators to store in copy vector
@@ -41,6 +29,16 @@ void merge(int ans[], int st, int end, int mid){
     for (int idx = st, x = 0; idx <= end; ++idx, ++x) {
         ans[idx] = copy[x];
     }
+}
+
+void mergeSort(int ans[], int st, int end){
+    if(st >= end) return; //if array has 1 element or repetation
+
+    int mid = st + (end - st) / 2;
+    mergeSort(ans, st, mid); // left part
+    mergeSort(ans, mid + 1, end); // right part
+
+    merge(ans, st, end, mid); // conquer
 }
 
 void printArray(int arr[], int n){
