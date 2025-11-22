@@ -11,7 +11,7 @@ int search(int arr[], int st, int end, int tar){
         return mid;
     }
 
-    if(arr[st] <= arr[mid]){ //L1
+    if(arr[st] <= arr[mid]){ //L1(Left side sorted matlb)
        if(arr[st] <= tar && tar <= arr[mid]){ //left side
         return search(arr, st, mid-1, tar);
        } 
@@ -20,7 +20,7 @@ int search(int arr[], int st, int end, int tar){
        }
     }
 
-    else{ //L2
+    else{ //L2(right side sorted matlb)
         if(arr[mid] <= tar && tar <= arr[end]){//right side
             return search(arr, mid+1, end, tar);
         }
