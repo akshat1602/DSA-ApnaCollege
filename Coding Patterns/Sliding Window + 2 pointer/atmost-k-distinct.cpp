@@ -12,6 +12,7 @@ int lengthOfLongestSubstringKDistinct(const string& s, int k) {
 
     while (right < n) {
         hash[s[right]]++;
+
         while (hash.size() > k) {
             hash[s[left]]--;
             if (hash[s[left]] == 0) {
@@ -19,6 +20,7 @@ int lengthOfLongestSubstringKDistinct(const string& s, int k) {
             }
             left++;
         }
+        
         maxLen = max(maxLen, right - left + 1);
         right++;
     }
