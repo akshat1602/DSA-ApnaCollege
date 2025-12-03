@@ -18,48 +18,88 @@ void permutations(string str, string ans){
 }
 
 int main() {
-    string str = "abc";
-    string ans = "";
+        string str = "abc";
+        string ans = "";
 
-    permutations(str, ans);
-    return 0;
+        permutations(str, ans);
+        return 0;
 }
 
 /*
-Revision Notes - Backtracking/permutations.cpp
+Revision Notes (with dry-run) - Backtracking/permutations.cpp
 
-- What this file does:
-    Generates all permutations of the input string `str` using a recursive
-    algorithm (`permutations`). Results are printed in `main`.
+Summary
+- Generates all permutations of `str` by choosing each character in turn,
+    recursing on the remaining characters, then returning to try the next choice.
 
-- Common reasons you might see incorrect or no output:
-    1) Program not being run: Ensure you compile and run the binary produced
-         by your build command. Example (PowerShell):
-             g++ "Backtracking/permutations.cpp" -o "Backtracking/permutations.exe"; "Backtracking/permutations.exe"
+Dry-run: initial call `permutations("abc", "")`
 
-    2) No output: This happens if `str` is empty or if the `permutations` function
-         does not reach the base case. Verify that `str` is initialized correctly.
+Root call: permutations("abc", "")
+Loop i=0..2
 
-    3) Output buffered or hidden: The program writes to stdout using `cout`.
-         If your runner captures output, check the integrated terminal or run the
-         executable directly to see results.
+i=0:
+    ch = 'a'
+    nextLvl = "bc"
+    call permutations("bc", "a")
+        i=0:
+            ch='b', nextLvl="c"
+            call permutations("c","ab")
+                i=0:
+                    ch='c', nextLvl=""
+                    call permutations("","abc") -> base case prints: abc
+                return to permutations("c","ab") -> loop ends -> return
+        return to permutations("bc","a")
+        i=1:
+            ch='c', nextLvl="b"
+            call permutations("b","ac")
+                call permutations("","acb") -> prints: acb
+            return
+        end -> return to root
 
-- Expected output for `str = "abc"` (order depends on implementation):
-        abc
-        acb
-        bac
-        bca
-        cab
-        cba
+i=1:
+    ch='b', nextLvl="ac"
+    call permutations("ac","b")
+        i=0 -> prints: bac
+        i=1 -> prints: bca
 
-- Testing checklist:
-    - Compile and run using the command above.
-    - Add a debug print at the start of `main` (e.g., `cout << "Running...\n";`) to
-        confirm the program starts.
-    - If no output is seen, instrument `permutations` to print when the base case is hit
-        to ensure the recursion reaches it.
+i=2:
+    ch='c', nextLvl="ab"
+    call permutations("ab","c")
+        i=0 -> prints: cab
+        i=1 -> prints: cba
 
-- Possible improvements I can apply:
-    - Add unit tests or a small test harness to run multiple inputs automatically.
-    - Add comments in `permutations` showing the base case and recursive steps.
+Final printed sequence (this implementation):
+    abc
+    acb
+    bac
+    bca
+    cab
+    cba
+
+Call-stack snapshot (just before printing "acb")
+- permutations("abc","") [root]
+    - permutations("bc","a")
+        - permutations("b","ac")
+            - permutations("","acb")  <-- now prints "acb"
+
+How backtracking manifests here
+- Choose: pick `ch = str[i]` and add to `ans` (passed as `ans + ch`).
+- Recurse: call `permutations(nextLvl, ans + ch)` to build remaining positions.
+- Unchoose: explicit undo isn't needed because `str` and `ans` are passed by
+    value (copies). When recursion returns the caller's `str`/`ans` are unchanged,
+    so the function naturally proceeds to the next `i` (the logical unchoose).
+
+Notes & optimizations
+- This implementation is simple and easy to understand, but it allocates
+    new strings at every call (`substr` and `ans + ch`). For large inputs this
+    increases time and memory overhead.
+- In-place swap-based approach (explicit choose/recurse/unchoose) reduces
+    allocations: swap characters in `str`, recurse with index+1, then swap back.
+
+Quick test
+- Compile and run (PowerShell):
+        g++ "Backtracking/permutations.cpp" -o "Backtracking/permutations.exe"; "Backtracking/permutations.exe"
+
+If you'd like, I can replace this with an in-place swap version and add
+instrumentation to show the call stack for each printed permutation.
 */
