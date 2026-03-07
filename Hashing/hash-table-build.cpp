@@ -35,7 +35,7 @@ class HashTable{
             idx += (key[i] * key[i])%totalSize;//to avoid overflow
         }
 
-        return idx; //yahan the new node will be inserted
+        return idx % totalSize; //yahan the new node will be inserted
     }
 
     void rehash(){ //O(n)
@@ -45,6 +45,7 @@ class HashTable{
         int oldSize = totalSize;
 
         totalSize = 2*totalSize;
+        currSize = 0;
         table = new Node*[totalSize];
 
         for (int i = 0; i < totalSize; i++)
@@ -85,10 +86,9 @@ public:
         int idx = hashFunction(key);
 
         Node* newNode = new Node(key, val);
-        Node* head = table[idx];
 
-        newNode->next = head;
-        head = newNode;
+        newNode->next = table[idx];
+        table[idx] = newNode;
 
         currSize++;
 
@@ -99,17 +99,83 @@ public:
         }
     }
 
-    void remove(string key){
+    bool exists(string key){
+        int idx = hashFunction(key);
 
+        Node* temp = table[idx];
+        while(temp != NULL){
+            if(temp->key == key){ //Found
+                return true;
+            }
+            temp = temp->next;
+        }
+        return false;
     }
 
     int search(string key){
+        int idx = hashFunction(key);
 
+        Node* temp = table[idx];
+        while(temp != NULL){
+            if(temp->key == key){ //Found
+                return temp->val;
+            }
+            temp = temp->next;
+        }
+        return -1;
+    }
+
+    void remove(string key){
+        int idx = hashFunction(key);
+
+        Node* temp = table[idx];
+        Node* prev = temp;
+
+        while(temp != NULL){ //O(lambda)
+            if(temp->key == key){ //remove
+                if(prev == temp){ //on head
+                    table[idx] = temp->next;
+                }
+                else{
+                    prev->next = temp->next; //middle element
+                }
+                break;
+            }
+
+            prev = temp;
+            temp = temp->next;
+        }
+
+    }
+
+    void print(){
+        for (int i = 0; i < totalSize; i++)
+        {
+            cout<<"idx"<<i<<"->";
+            Node* temp = table[i];
+            while(temp != NULL){
+                cout<<"("<<temp->key<<", "<<temp->val<<") -> ";
+                temp = temp->next;
+            }
+            cout<<endl;
+        }
     }
 };
 
 int main() {
     HashTable ht;
+
+    ht.insert("India", 150);
+    ht.insert("China", 150);
+    ht.insert("USA", 50);
+    ht.insert("Nepal", 10);
+    ht.insert("UK", 20);
+
+    ht.remove("China");
+    ht.print();
+    cout<<"---------\n";
+    ht.remove("UK");
+    ht.print();
     
     return 0;
 }
