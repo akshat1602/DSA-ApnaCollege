@@ -4,7 +4,7 @@ using namespace std;
 
 int main()
 {
-    std::cout<<PI<<"\n";
+    cout<<PI<<"\n";
     cout<<"Akshat "<<"Trivedi";
     return 0;
 }
