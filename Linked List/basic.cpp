@@ -114,6 +114,17 @@ public :
      }
 
      void pop_back(){
+        if(head == NULL){
+            cout<<"LL is empty\n";
+            return;
+        }
+
+        if(head->next == NULL){
+            delete head;
+            head = tail = NULL;
+            return;
+        }
+        
         Node* temp = head;
 
         while(temp->next->next != NULL){
