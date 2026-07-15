@@ -15,6 +15,23 @@ void pushAtBottom(stack <int> &s, int val){ //O(n)
     s.push(temp);
 }
 
+void pushAtBottomIterative(stack <int> &s, int val){
+    stack <int> temp; //temp stack to store elements
+
+    while(!s.empty()){
+        temp.push(s.top());
+        s.pop();
+    }
+
+    s.push(val); //at bottom of stack
+
+    // Move back from temp to original
+    while(!temp.empty()){
+        s.push(temp.top());
+        temp.pop();
+    }
+}
+
 
 int main() {
     stack <int> s;
@@ -23,7 +40,8 @@ int main() {
     s.push(2);
     s.push(1);
 
-    pushAtBottom(s, 4);
+    // pushAtBottom(s, 4);
+    pushAtBottomIterative(s, 5);
     
     cout<<"Order of elements popped :"<<" ";
     while(!s.empty()){
